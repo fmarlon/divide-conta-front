@@ -2,7 +2,7 @@ const fs = require('fs');
 const http = require('http');
 const path = require('path');
 
-const port = 8000;
+const port = process.env.PORT || 8000;
 const directoryName = './public';
 
 const types = {
