@@ -92,6 +92,7 @@ const app = Vue.createApp({
             this.itensModel.clear()
             this.descontosModel.clear()
             this.acrescimosModel.clear()
+            this.itensModel.setFocusFirstField()
         },
         pagar(divisaoDetalheDTO) {
             alert('Não implementado')
