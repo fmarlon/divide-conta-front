@@ -52,12 +52,18 @@ class CrudModel {
         }
     }        
 
+    clear() {
+        this.items = []
+        this.entry = {}
+        this.nextItemId = 1
+    }
+
 }
 
 if (window.location.host == 'divide-conta-front.herokuapp.com') {
     axios.defaults.baseURL = 'https://divide-conta-api.herokuapp.com'
 } else {
-    axios.defaults.baseURL = 'http://localhost:8080' //'https://divide-conta-api.herokuapp.com'
+    axios.defaults.baseURL = 'http://localhost:8080'
 }
 
 const app = Vue.createApp({
@@ -80,6 +86,15 @@ const app = Vue.createApp({
             axios.post('/contas/dividir', contaDTO).then(response => {
                 this.divisaoDTO = response.data
             })
+        },
+        limpar() {
+            this.divisaoDTO = null
+            this.itensModel.clear()
+            this.descontosModel.clear()
+            this.acrescimosModel.clear()
+        },
+        pagar(divisaoDetalheDTO) {
+            alert('Não implementado')
         }
     }
 })

@@ -108,17 +108,18 @@
         <div class="row" v-if="divisaoDTO != null">
           <h5>Resultado da Divisão</h5>
 
-          <q-table :rows="divisaoDTO.divisoes" flat :columns="[ 
+          <q-table :rows="divisaoDTO.detalhes" :columns="[ 
                 { label: 'Participante', align: 'left', field: row => row.participante }, 
                 { label: 'Valor Itens', align: 'right', field: row => row.valorItens }, 
-                { name: 'Descontos', label: 'Valor', align: 'right', field: row => row.descontos }, 
-                { name: 'Acréscimos', label: 'Valor', align: 'right', field: row => row.acrescimos }, 
+                { label: 'Proporção', align: 'right', field: row => row.proporcao * 100 + '%' }, 
+                { label: 'Descontos', align: 'right', field: row => row.descontos }, 
+                { label: 'Acréscimos', align: 'right', field: row => row.acrescimos }, 
                 { label: 'Valor Pagar', align: 'right', field: row => row.valorAPagar }, 
                 
-                { name: 'actions' }
+                { name: 'actions', label: 'Pagamento' }
             ]"
             :pagination="divisoesPagination" class="full-width q-mt-md" 
-            hide-bottom hide-header row-key="participante" >
+            hide-bottom row-key="participante" >
             <template v-slot:body-cell-actions="props">
               <q-td :props="props">
                 <q-btn flat icon="payment" @click="pagar(props.row)"></q-btn>                
