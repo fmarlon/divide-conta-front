@@ -54,7 +54,7 @@ class CrudModel {
 
 }
 
-axios.defaults.baseURL = 'https://divide-conta-api.herokuapp.com'
+axios.defaults.baseURL = 'http://localhost:8080' //'https://divide-conta-api.herokuapp.com'
 
 const app = Vue.createApp({
 	data() {
@@ -70,7 +70,7 @@ const app = Vue.createApp({
         calcular() {
             const contaDTO = {
                 itens: this.itensModel.items,
-                descontos: this.itensModel.items,
+                descontos: this.descontosModel.items,
                 acrescimos: this.acrescimosModel.items
             }
             axios.post('/contas/dividir', contaDTO).then(response => {
