@@ -54,7 +54,11 @@ class CrudModel {
 
 }
 
-axios.defaults.baseURL = 'http://localhost:8080' //'https://divide-conta-api.herokuapp.com'
+if (window.location.host == 'divide-conta-front.herokuapp.com') {
+    axios.defaults.baseURL = 'https://divide-conta-api.herokuapp.com'
+} else {
+    axios.defaults.baseURL = 'http://localhost:8080' //'https://divide-conta-api.herokuapp.com'
+}
 
 const app = Vue.createApp({
 	data() {
