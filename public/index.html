@@ -21,9 +21,9 @@
         
         <h5>Itens/Produtos Comprados</h5>
         <div class="row col-12 q-gutter-sm">
-          <q-input outlined v-model="itensModel.entry.descricao" label="Descrição do Item/Produto" class="col-12 col-md-5" ref="txtDescricaoItem" @keypress.enter="$refs.addItem.click()"></q-input>
-          <q-input outlined v-model="itensModel.entry.valor" label="Valor R$" class="col-12 col-md-2" @keypress.enter="$refs.addItem.click()"></q-input>
-          <q-input outlined v-model="itensModel.entry.solicitante" label="Solicitante" class="col-12 col-md-3" @keypress.enter="$refs.addItem.click()"></q-input>
+          <q-input outlined v-model="itensModel.entry.descricao" label="Descrição do Item/Produto" maxlength="50" class="col-12 col-md-5" ref="txtDescricaoItem" @keypress.enter="$refs.addItem.click()"></q-input>
+          <q-input outlined v-model="itensModel.entry.valor" label="Valor R$" maxlength="20" type="number" class="col-12 col-md-2" @keypress.enter="$refs.addItem.click()"></q-input>
+          <q-input outlined v-model="itensModel.entry.solicitante" maxlength="50" label="Solicitante" class="col-12 col-md-3" @keypress.enter="$refs.addItem.click()"></q-input>
           <q-btn ref="addItem" size="lg" color="secondary" @click="e => itensModel.addItem(e)" :icon="itensModel.isNewItem()?'add':'check'"></q-btn>
         </div>
 
@@ -45,26 +45,32 @@
         <div class="row col-12 col-md-6 items-start">
           <h5>Acréscimo(s)</h5>
 
-          <div class="row full-width">
-            <q-input outlined dense v-model="acrescimosModel.entry.descricao" label="Descrição" class="col-7" ref="txtDescricaoAcrescimo" @keypress.enter="$refs.addAcrescimo.click()"></q-input>
-            <q-input outlined dense v-model="acrescimosModel.entry.valor" label="Valor" class="col-2" @keypress.enter="$refs.addAcrescimo.click()"></q-input>
-            <q-input outlined dense v-model="acrescimosModel.entry.solicitante" class="col-1" @keypress.enter="$refs.addAcrescimo.click()"></q-input>
+          <div class="row full-width q-gutter-xs">
+            <q-input outlined dense v-model="acrescimosModel.entry.descricao" maxlength="50" label="Descrição" class="col" ref="txtDescricaoAcrescimo" @keypress.enter="$refs.addAcrescimo.click()"></q-input>
+            <q-input outlined dense v-model="acrescimosModel.entry.valor" type="number" maxlength="20" label="Valor" class="col-3" @keypress.enter="$refs.addAcrescimo.click()">
+              <template v-slot:append>
+                <q-checkbox size="xs" class="col-auto" dense
+                  true-value="PORCENTAGEM" false-value="DINHEIRO" 
+                  checked-icon="percent"  unchecked-icon="attach_money" indeterminate-icon="attach_money" 
+                  v-model="acrescimosModel.entry.tipoValor"></q-checkbox>
+              </template>
+            </q-input>
 
-            <q-btn ref="addAcrescimo" color="secondary" @click="e => acrescimosModel.addItem(e)" size="sm" icon="add"></q-btn>
+            <q-btn ref="addAcrescimo" color="secondary" @click="e => acrescimosModel.addItem(e)" size="xs" icon="add" class="col-auto"></q-btn>
           </div>
 
           <q-table :rows="acrescimosModel.items" flat :columns="[ 
                 { name: 'descricao', label: 'Item', align: 'left', field: row => row.descricao }, 
-                { name: 'valor', label: 'Valor', align: 'right', field: row => row.valor }, 
-                { name: 'actions' }
+                { name: 'valor', label: 'Valor', align: 'right', field: row => row.valor + (row.tipoValor == 'PORCENTAGEM' ? '%' : '') }, 
+                { name: 'actions', align: 'center' }
             ]"
             :pagination="acrescimosModel.pagination" class="full-width q-mt-md" 
             hide-bottom hide-header row-key="id" 
             v-show="acrescimosModel.items.length > 0">
             <template v-slot:body-cell-actions="props">
               <q-td :props="props">
-                <q-btn flat icon="edit" @click="acrescimosModel.editItem(props.row)"></q-btn>
-                <q-btn flat icon="delete" color="red" @click="acrescimosModel.removeItem(props.row)"></q-btn>
+                <q-btn flat size="sm" icon="edit" @click="acrescimosModel.editItem(props.row)"></q-btn>
+                <q-btn flat size="sm" icon="delete" color="red" @click="acrescimosModel.removeItem(props.row)"></q-btn>
               </q-td>
             </template>
               
@@ -74,44 +80,46 @@
         <div class="row col-12 col-md-6 items-start">
           <h5>Desconto(s)</h5>
 
-          <div class="row full-width">
-            <q-input outlined dense v-model="descontosModel.entry.descricao" label="Descrição" class="col-7" ref="txtDescricaoDesconto" @keypress.enter="$refs.addDesconto.click()"></q-input>
-            <q-input outlined dense v-model="descontosModel.entry.valor" label="Valor" class="col-2" @keypress.enter="$refs.addDesconto.click()"></q-input>
-            <q-input outlined dense v-model="descontosModel.entry.solicitante" class="col-1" @keypress.enter="$refs.addDesconto.click()" flat></q-input>
+          <div class="row full-width q-gutter-xs">
+            <q-input outlined dense v-model="descontosModel.entry.descricao" maxlength="50"  label="Descrição" class="col" ref="txtDescricaoDesconto" @keypress.enter="$refs.addDesconto.click()"></q-input>
+            <q-input outlined dense v-model="descontosModel.entry.valor" type="number" maxlength="20" label="Valor" class="col-3" @keypress.enter="$refs.addDesconto.click()">
+              <template v-slot:append>
+                <q-checkbox size="xs" class="col-auto" dense
+                  true-value="PORCENTAGEM" false-value="DINHEIRO" 
+                  checked-icon="percent"  unchecked-icon="attach_money" indeterminate-icon="attach_money" 
+                  v-model="descontosModel.entry.tipoValor">
+                </q-checkbox>
+              </template>
+            </q-input>
 
-            <q-btn ref="addDesconto" color="secondary" @click="e => descontosModel.addItem(e)" size="sm" icon="add"></q-btn>
+            <q-btn ref="addDesconto" color="secondary" @click="e => descontosModel.addItem(e)" size="xs" icon="add" class="col-auto"></q-btn>
           </div>
 
           <q-table :rows="descontosModel.items" flat :columns="[ 
                 { name: 'descricao', label: 'Item', align: 'left', field: row => row.descricao }, 
-                { name: 'valor', label: 'Valor R$', align: 'right', field: row => row.valor }, 
-                { name: 'actions' }
+                { name: 'valor', label: 'Valor R$', align: 'right', field: row => row.valor + (row.tipoValor == 'PORCENTAGEM' ? '%' : '') }, 
+                { name: 'actions', align: 'center' }
             ]"
             :pagination="descontosModel.pagination" class="full-width q-mt-md" 
             hide-bottom hide-header :columns="columns" row-key="id" 
             v-show="descontosModel.items.length > 0">
             <template v-slot:body-cell-actions="props">
               <q-td :props="props">
-                <q-btn flat icon="edit" @click="descontosModel.editItem(props.row)"></q-btn>
-                <q-btn flat icon="delete" color="red" @click="descontosModel.removeItem(props.row)"></q-btn>
+                <q-btn size="sm" flat icon="edit" @click="descontosModel.editItem(props.row)"></q-btn>
+                <q-btn size="sm" flat icon="delete" color="red" @click="descontosModel.removeItem(props.row)"></q-btn>
               </q-td>
             </template>
               
           </q-table>    
         </div>
         
-        <div class="row full-width q-mt-xl q-gutter-md justify-end">
-          <q-btn size="lg" color="primary" icon="calculate" @click="calcular">&nbsp;Calcular</q-btn>
-          <q-btn size="lg" color="grey" flat icon="backspace" @click="limpar">&nbsp;Limpar</q-btn>
-        </div>
-
-        <div class="row" v-if="divisaoDTO != null">
-          <h5>Resultado da Divisão</h5>
+        <div class="row full-width" v-if="divisaoDTO != null">
+          <h5>Resultado</h5>
 
           <q-table :rows="divisaoDTO.detalhes" :columns="[ 
                 { label: 'Participante', align: 'left', field: row => row.participante }, 
                 { label: 'Valor Itens', align: 'right', field: row => row.valorItens }, 
-                { label: 'Proporção', align: 'right', field: row => row.proporcao * 100 + '%' }, 
+                { label: 'Proporção', align: 'right', field: row => (row.proporcao * 100).toFixed(2) + '%' }, 
                 { label: 'Descontos', align: 'right', field: row => row.descontos }, 
                 { label: 'Acréscimos', align: 'right', field: row => row.acrescimos }, 
                 { label: 'Valor Pagar', align: 'right', field: row => row.valorAPagar }, 
@@ -127,7 +135,34 @@
             </template>
               
           </q-table>   
+
         </div>
+
+        <div class="row full-width q-mt-xl q-gutter-md justify-end">
+          <q-btn size="lg" color="primary" icon="calculate" @click="calcular" v-show="false">&nbsp;Calcular</q-btn>
+          <q-btn size="lg" color="grey" flat icon="backspace" @click="limpar">&nbsp;Limpar</q-btn>
+        </div>
+
+        <q-dialog ref="dialog">
+          <q-card style="min-width: 500px;">
+            <q-card-section>
+              <div class="text-h6">Pagamento</div>
+            </q-card-section>
+    
+            <q-card-section class="q-pt-none">
+              <p><span class="text-caption">PARTICIPANTE:</span> <br>{{ divisaoDetalhe.participante }}</p>
+              <p><span class="text-caption">VALOR: </span><br>{{ divisaoDetalhe.valorAPagar }}</p>
+              <p><span class="text-caption">FORMA DE PAGAMENTO:</span> <br>{{ divisaoDetalhe.cobranca.formaPagamento }}</p>
+              <template v-for="campo in Object.keys(divisaoDetalhe.cobranca.dadosParaPagamento)" v-if="divisaoDetalhe.cobranca != null">
+                <p><span class="text-caption">{{ campo.replace('_', ' ') }}: </span> <br>{{ divisaoDetalhe.cobranca.dadosParaPagamento[campo] }}</p>
+              </template>
+            </q-card-section>
+    
+            <q-card-actions align="right">
+              <q-btn flat label="OK" color="primary" v-close-popup />
+            </q-card-actions>
+          </q-card>
+        </q-dialog>
 
     </div>
 

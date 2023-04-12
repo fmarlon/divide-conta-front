@@ -22,6 +22,7 @@ class CrudModel {
             Object.assign(item, this.entry)
         }
         this.newItem()
+        this.context.calcular()
     }
 
     newItem() {
@@ -41,6 +42,7 @@ class CrudModel {
     removeItem(row) {
         const index = this.items.indexOf(row)
         this.items.splice(index, 1)
+        this.context.calcular()
     }
 
     setFocusFirstField() {
@@ -73,7 +75,9 @@ const app = Vue.createApp({
             descontosModel: new CrudModel({ context: this, firstFieldRef: 'txtDescricaoDesconto' }),
             acrescimosModel: new CrudModel({ context: this, firstFieldRef: 'txtDescricaoAcrescimo' }),
             divisaoDTO: null,
-            divisoesPagination: { rowsPerPage: 50 }
+            divisoesPagination: { rowsPerPage: 50 },
+            divisaoDetalhe: {},
+            tipoValorOptions: [ 'R$', '%' ]
         }
     },
     methods: {
@@ -85,6 +89,8 @@ const app = Vue.createApp({
             }
             axios.post('/contas/dividir', contaDTO).then(response => {
                 this.divisaoDTO = response.data
+            }).catch(error => {
+                this.handleApiError(error)
             })
         },
         limpar() {
@@ -95,7 +101,27 @@ const app = Vue.createApp({
             this.itensModel.setFocusFirstField()
         },
         pagar(divisaoDetalheDTO) {
-            alert('Não implementado')
+            this.divisaoDetalhe = divisaoDetalheDTO
+            this.$refs.dialog.show()
+
+            if (divisaoDetalheDTO.cobranca == null) {
+                const gerarCobrancaDTO = { valor: divisaoDetalheDTO.valorAPagar }
+
+                axios.post('/pagamentos/gerar-cobranca', gerarCobrancaDTO).then(response => {
+                    divisaoDetalheDTO.cobranca = response.data
+                }).catch(error => {
+                    this.handleApiError(error)
+                })
+            }
+        },
+        handleApiError(error) {
+            const response = error.response
+            const message = (response && response.data && response.message) || error.message
+            this.$q.dialog({
+                title: 'Erro',
+                message: 'Erro ao chamar serviço: <p class="text-red">' + message + '</p>',
+                html: true
+            })
         }
     }
 })
