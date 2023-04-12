@@ -6,12 +6,17 @@ class CrudModel {
     firstFieldRef = null
     context = null
     pagination = { rowsPerPage: 20 }
+    fieldSuffix = ''
 
     constructor(options) {
         Object.assign(this, options)
     }
 
     addItem() {
+        if (this.entry.valor == null) {
+            this.setFocus('txtValor' + this.fieldSuffix)
+            return
+        }
         if (this.isNewItem()) {
             const item = Object.assign({}, this.entry)
             item.id = this.nextItemId++;
@@ -46,12 +51,13 @@ class CrudModel {
     }
 
     setFocusFirstField() {
-        const elementRef = this.firstFieldRef
-        if (elementRef) {
-            this.context.$nextTick(() => {
-                this.context.$refs[elementRef].$el.focus()
-            })
-        }
+        this.setFocus('txtDescricao' + this.fieldSuffix)
+    }        
+
+    setFocus(elementRef) {
+        this.context.$nextTick(() => {
+            this.context.$refs[elementRef].$el.focus()
+        })
     }        
 
     clear() {
@@ -71,9 +77,9 @@ if (window.location.host == 'divide-conta-front.herokuapp.com') {
 const app = Vue.createApp({
 	data() {
         return {
-            itensModel: new CrudModel({ context: this, firstFieldRef: 'txtDescricaoItem' }),
-            descontosModel: new CrudModel({ context: this, firstFieldRef: 'txtDescricaoDesconto' }),
-            acrescimosModel: new CrudModel({ context: this, firstFieldRef: 'txtDescricaoAcrescimo' }),
+            itensModel: new CrudModel({ context: this, fieldSuffix: 'Item' }),
+            descontosModel: new CrudModel({ context: this, fieldSuffix: 'Desconto' }),
+            acrescimosModel: new CrudModel({ context: this, fieldSuffix: 'Acrescimo' }),
             divisaoDTO: null,
             divisoesPagination: { rowsPerPage: 50 },
             divisaoDetalhe: {},
@@ -87,6 +93,12 @@ const app = Vue.createApp({
                 descontos: this.descontosModel.items,
                 acrescimos: this.acrescimosModel.items
             }
+
+            if (contaDTO.itens.length == 0) {
+                this.divisaoDTO = null
+                return
+            }
+            
             axios.post('/contas/dividir', contaDTO).then(response => {
                 this.divisaoDTO = response.data
             }).catch(error => {
@@ -116,7 +128,7 @@ const app = Vue.createApp({
         },
         handleApiError(error) {
             const response = error.response
-            const message = (response && response.data && response.message) || error.message
+            const message = (response && response.data && response.data.message) || error.message
             this.$q.dialog({
                 title: 'Erro',
                 message: 'Erro ao chamar serviço: <p class="text-red">' + message + '</p>',

@@ -22,15 +22,15 @@
         <h5>Itens/Produtos Comprados</h5>
         <div class="row col-12 q-gutter-sm">
           <q-input outlined v-model="itensModel.entry.descricao" label="Descrição do Item/Produto" maxlength="50" class="col-12 col-md-5" ref="txtDescricaoItem" @keypress.enter="$refs.addItem.click()"></q-input>
-          <q-input outlined v-model="itensModel.entry.valor" label="Valor R$" maxlength="20" type="number" class="col-12 col-md-2" @keypress.enter="$refs.addItem.click()"></q-input>
-          <q-input outlined v-model="itensModel.entry.solicitante" maxlength="50" label="Solicitante" class="col-12 col-md-3" @keypress.enter="$refs.addItem.click()"></q-input>
+          <q-input outlined v-model="itensModel.entry.valor" label="Valor R$" maxlength="20" type="number" class="col-12 col-md-2" ref="txtValorItem" @keypress.enter="$refs.addItem.click()"></q-input>
+          <q-input outlined v-model="itensModel.entry.participante" maxlength="50" label="Participante" class="col-12 col-md-3" @keypress.enter="$refs.addItem.click()"></q-input>
           <q-btn ref="addItem" size="lg" color="secondary" @click="e => itensModel.addItem(e)" :icon="itensModel.isNewItem()?'add':'check'"></q-btn>
         </div>
 
         <q-table :rows="itensModel.items" :columns="[ 
-              { name: 'descricao', label: 'Item', align: 'left', field: row => row.descricao }, 
-              { name: 'valor', label: 'Valor R$', align: 'right', field: row => row.valor }, 
-              { name: 'solicitante', label: 'Solicitante', align: 'left', field: row => row.solicitante },
+              { label: 'Item', align: 'left', field: row => row.descricao }, 
+              { label: 'Valor R$', align: 'right', field: row => row.valor }, 
+              { label: 'Participante', align: 'left', field: row => row.participante },
               { name: 'actions' }
           ]" :pagination="itensModel.pagination" class="full-width q-mt-md" hide-bottom row-key="id" 
           v-show="itensModel.items.length > 0">
@@ -47,7 +47,7 @@
 
           <div class="row full-width q-gutter-xs">
             <q-input outlined dense v-model="acrescimosModel.entry.descricao" maxlength="50" label="Descrição" class="col" ref="txtDescricaoAcrescimo" @keypress.enter="$refs.addAcrescimo.click()"></q-input>
-            <q-input outlined dense v-model="acrescimosModel.entry.valor" type="number" maxlength="20" label="Valor" class="col-3" @keypress.enter="$refs.addAcrescimo.click()">
+            <q-input outlined dense v-model="acrescimosModel.entry.valor" type="number" maxlength="20" label="Valor" class="col-3" ref="txtValorAcrescimo" @keypress.enter="$refs.addAcrescimo.click()">
               <template v-slot:append>
                 <q-checkbox size="xs" class="col-auto" dense
                   true-value="PORCENTAGEM" false-value="DINHEIRO" 
@@ -82,7 +82,7 @@
 
           <div class="row full-width q-gutter-xs">
             <q-input outlined dense v-model="descontosModel.entry.descricao" maxlength="50"  label="Descrição" class="col" ref="txtDescricaoDesconto" @keypress.enter="$refs.addDesconto.click()"></q-input>
-            <q-input outlined dense v-model="descontosModel.entry.valor" type="number" maxlength="20" label="Valor" class="col-3" @keypress.enter="$refs.addDesconto.click()">
+            <q-input outlined dense v-model="descontosModel.entry.valor" type="number" maxlength="20" label="Valor" class="col-3" ref="txtValorDesconto" @keypress.enter="$refs.addDesconto.click()">
               <template v-slot:append>
                 <q-checkbox size="xs" class="col-auto" dense
                   true-value="PORCENTAGEM" false-value="DINHEIRO" 
@@ -172,6 +172,6 @@
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     
-    <script src="index.js" type="text/javascript"></script>
+    <script src="index.js?t=202304121134" type="text/javascript"></script>
   </body>
 </html>
