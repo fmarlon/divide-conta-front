@@ -13,7 +13,7 @@ class CrudModel {
     }
 
     addItem() {
-        if (this.entry.valor == null) {
+        if (this.entry.valor == null || this.entry.valor == 0) {
             this.setFocus('txtValor' + this.fieldSuffix)
             return
         }
